@@ -1,5 +1,5 @@
 import React from 'react'
-import AuthNav from './src/navigation/Navigation'
+import Nav from './src/navigation/Navigation'
 import { useFonts } from 'expo-font'
 import { Ionicons } from '@expo/vector-icons'
 import { ActivityIndicator } from 'react-native'
@@ -14,7 +14,7 @@ const App = () => {
     if (!loaded) {
         return <ActivityIndicator size="large" />
     }
-    return <AuthNav />
+    return <Nav />
 }
 
 export default App
