@@ -7,6 +7,7 @@ import { Ionicons } from '@expo/vector-icons'
 import SignIn from '../components/screens/authentification/SignIn'
 import SignUp from '../components/screens/authentification/SignUp'
 import Home from '../components/screens/Home'
+import ListDisquettes from '../components/screens/favorites/ListDisquettes'
 
 const Logo = () => {
     return (
@@ -50,6 +51,20 @@ const HomeStackScreen = () => {
     )
 }
 
+const FavoritesStack = createStackNavigator()
+
+const FavoritesStackScreen = () => {
+    return (
+        <FavoritesStack.Navigator initialRouteName="Favorites">
+            <FavoritesStack.Screen
+                name="Favorites"
+                component={ListDisquettes}
+                options={{ headerTitle: (props) => <Logo {...props} /> }}
+            />
+        </FavoritesStack.Navigator>
+    )
+}
+
 const AppTabs = createBottomTabNavigator()
 const AppTabsScreen = () => {
     return (
@@ -59,7 +74,9 @@ const AppTabsScreen = () => {
                     let iconName
 
                     if (route.name === 'Home') {
-                        iconName = focused ? 'home-sharp' : 'home-outlined'
+                        iconName = focused ? 'home-sharp' : 'home-outline'
+                    } else if (route.name === 'Favorites') {
+                        iconName = focused ? 'heart' : 'heart-outline'
                     }
                     return (
                         <Ionicons name={iconName} color={color} size={size} />
@@ -68,6 +85,7 @@ const AppTabsScreen = () => {
             })}
         >
             <AppTabs.Screen name="Home" component={HomeStackScreen} />
+            <AppTabs.Screen name="Favorites" component={FavoritesStackScreen} />
         </AppTabs.Navigator>
     )
 }
