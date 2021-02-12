@@ -70,11 +70,7 @@ const ListDisquettes = () => {
             <Animated.View
                 style={[styles.rowFront, { height: rowHeightAnimatedValue }]}
             >
-                <TouchableHighlight
-                    style={styles.rowFrontVisible}
-                    // onPress={() => console.log('Element touched')}
-                    // underlayColor={'#aaa'}
-                >
+                <TouchableHighlight style={styles.rowFrontVisible}>
                     <View>
                         <Text style={styles.title} numberOfLines={1}>
                             {data.item.text}
@@ -92,7 +88,7 @@ const ListDisquettes = () => {
             <VisibleItem
                 data={data}
                 rowHeightAnimatedValue={rowHeightAnimatedValue}
-                removeRow={(params) => deleteRow(rowMap, data.item.key)}
+                removeRow={() => deleteRow(rowMap, data.item.key)}
             />
         )
     }
@@ -111,13 +107,12 @@ const ListDisquettes = () => {
                 toValue: 500,
                 useNativeDriver: false,
             }).start()
+        } else {
+            Animated.spring(rowActionAnimatedValue, {
+                toValue: 75,
+                useNativeDriver: false,
+            }).start()
         }
-        //  else {
-        //     Animated.spring(rowActionAnimatedValue, {
-        //       toValue: 75,
-        //       useNativeDriver: false
-        //     }).start();
-
         return (
             <Animated.View
                 style={[styles.rowBack, { height: rowActionAnimatedValue }]}
