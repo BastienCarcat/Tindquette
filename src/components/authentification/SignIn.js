@@ -13,17 +13,14 @@ const SignIn = ({ navigation }) => {
             >
                 <Image
                     style={styles.img}
-                    source={require('../../../../assets/logo.png')}
+                    source={require('../../../assets/logo.png')}
                 />
             </View>
             <View style={{ flex: 2 }}>
-                <Item rounded style={styles.width}>
-                    <Input placeholder="Pseudo" />
+                <Item rounded style={styles.email}>
+                    <Input placeholder="Addresse mail" />
                 </Item>
-                <Item rounded style={styles.margin}>
-                    <Input placeholder="Adresse mail" />
-                </Item>
-                <Item rounded style={styles.margin}>
+                <Item rounded style={styles.password}>
                     <Input placeholder="Mot de passe" />
                 </Item>
                 <Button
@@ -39,8 +36,17 @@ const SignIn = ({ navigation }) => {
                     // )
                     // }
                 >
-                    <Text>S'inscrire</Text>
+                    <Text>Se connecter</Text>
                 </Button>
+                <View style={styles.signUp}>
+                    <Text>Nouveau ici ? </Text>
+                    <Text
+                        style={styles.signUpLink}
+                        onPress={() => navigation.navigate('SignUp')}
+                    >
+                        S'inscrire
+                    </Text>
+                </View>
             </View>
             <Text style={styles.footer}>Tindquette</Text>
         </View>
@@ -56,10 +62,10 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         // justifyContent: 'center',
     },
-    width: {
+    email: {
         width: 350,
     },
-    margin: {
+    password: {
         width: 350,
         marginTop: 16,
     },
@@ -71,6 +77,15 @@ const styles = StyleSheet.create({
     img: {
         width: 200,
         height: 200,
+    },
+    signUp: {
+        marginTop: 20,
+        alignSelf: 'center',
+        flexDirection: 'row',
+    },
+    signUpLink: {
+        color: '#FF515B',
+        textDecorationLine: 'underline',
     },
     footer: {
         fontSize: 12,

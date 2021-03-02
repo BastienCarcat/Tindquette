@@ -62,7 +62,7 @@ const Home = () => {
                     console.log('onSwipedAll')
                 }}
                 cardIndex={0}
-                backgroundColor={'#FFFF'}
+                backgroundColor={'#FFF'}
                 stackSize={3}
             ></Swiper>
         </View>

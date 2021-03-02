@@ -4,12 +4,14 @@ import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { Ionicons } from '@expo/vector-icons'
-import SignIn from '../components/screens/authentification/SignIn'
-import SignUp from '../components/screens/authentification/SignUp'
-import Home from '../components/screens/home/Home'
-import ListDisquettes from '../components/screens/favorites/ListDisquettes'
-import Profile from '../components/screens/profile/Profile'
-import FormAdd from '../components/screens/add/FormAdd'
+import SignIn from '../components/authentification/SignIn'
+import SignUp from '../components/authentification/SignUp'
+import Home from '../components/home/Home'
+import ListDisquettes from '../components/favorites/ListDisquettes'
+import Profile from '../components/profile/Profile'
+import FormAdd from '../components/add/FormAdd'
+import Validation from '../components/profile/admin/Validation'
+import UsersManagement from '../components/profile/admin/UsersManagement'
 
 const Logo = () => {
     return (
@@ -75,6 +77,16 @@ const ProfileStackScreen = () => {
             <ProfileStack.Screen
                 name="Profile"
                 component={Profile}
+                options={{ headerTitle: (props) => <Logo {...props} /> }}
+            />
+            <ProfileStack.Screen
+                name="Validation"
+                component={Validation}
+                options={{ headerTitle: (props) => <Logo {...props} /> }}
+            />
+            <ProfileStack.Screen
+                name="UsersManagement"
+                component={UsersManagement}
                 options={{ headerTitle: (props) => <Logo {...props} /> }}
             />
         </ProfileStack.Navigator>
