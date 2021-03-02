@@ -2,7 +2,7 @@ import React from 'react'
 import Nav from './src/navigation/Navigation'
 import { useFonts } from 'expo-font'
 import { Ionicons } from '@expo/vector-icons'
-import { ActivityIndicator } from 'react-native'
+import { ActivityIndicator, SafeAreaView, StyleSheet } from 'react-native'
 
 const App = () => {
     const [loaded] = useFonts({
@@ -14,7 +14,17 @@ const App = () => {
     if (!loaded) {
         return <ActivityIndicator size="large" />
     }
-    return <Nav />
+    return (
+        <SafeAreaView style={styles.container}>
+            <Nav />
+        </SafeAreaView>
+    )
 }
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+    },
+})
 
 export default App
