@@ -14,7 +14,10 @@ const ListDisquettes = () => {
     const [data, setdata] = useState(
         Array(20)
             .fill('')
-            .map((_, i) => ({ key: `${i}`, text: `item #${i}` })),
+            .map((_, i) => ({
+                key: `${i}`,
+                text: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tincidunt, velit ut euismod tristique, ex ante erat #${i}`,
+            })),
     )
 
     const onRowDidOpen = (rowKey) => {
@@ -72,7 +75,7 @@ const ListDisquettes = () => {
             >
                 <TouchableHighlight style={styles.rowFrontVisible}>
                     <View>
-                        <Text style={styles.title} numberOfLines={1}>
+                        <Text style={styles.title} numberOfLines={3}>
                             {data.item.text}
                         </Text>
                     </View>
@@ -82,7 +85,7 @@ const ListDisquettes = () => {
     }
 
     const renderItem = (data, rowMap) => {
-        const rowHeightAnimatedValue = new Animated.Value(60)
+        const rowHeightAnimatedValue = new Animated.Value(85)
 
         return (
             <VisibleItem
@@ -117,7 +120,7 @@ const ListDisquettes = () => {
             <Animated.View
                 style={[styles.rowBack, { height: rowActionAnimatedValue }]}
             >
-                <Text>Left</Text>
+                {/* <Text>Left</Text> */}
                 <TouchableOpacity
                     style={[styles.backRightBtn, styles.backRightBtnLeft]}
                     onPress={onClose}
@@ -171,7 +174,7 @@ const ListDisquettes = () => {
 
     const renderHiddenItem = (data, rowMap) => {
         const rowActionAnimatedValue = new Animated.Value(75)
-        const rowHeightAnimatedValue = new Animated.Value(60)
+        const rowHeightAnimatedValue = new Animated.Value(85)
 
         return (
             <HiddenItemWithActions
@@ -197,7 +200,7 @@ const ListDisquettes = () => {
                 renderHiddenItem={renderHiddenItem}
                 leftOpenValue={75}
                 rightOpenValue={-150}
-                // disableRightSwipe
+                disableRightSwipe
                 onRowDidOpen={onRowDidOpen}
                 leftActivationValue={100}
                 rightActivationValue={-200}
@@ -217,6 +220,7 @@ export default ListDisquettes
 const styles = StyleSheet.create({
     container: {
         backgroundColor: '#f4f4f4',
+        paddingTop: 20,
         flex: 1,
     },
     backTextWhite: {
@@ -225,7 +229,7 @@ const styles = StyleSheet.create({
     rowFront: {
         backgroundColor: '#FFF',
         borderRadius: 5,
-        height: 60,
+        height: 85,
         margin: 5,
         marginBottom: 15,
         shadowColor: '#999',
@@ -237,7 +241,7 @@ const styles = StyleSheet.create({
     rowFrontVisible: {
         backgroundColor: '#FFF',
         borderRadius: 5,
-        height: 60,
+        height: 85,
         padding: 10,
         marginBottom: 15,
     },
@@ -264,6 +268,7 @@ const styles = StyleSheet.create({
     backRightBtnLeft: {
         backgroundColor: '#1f65ff',
         right: 75,
+        width: 200,
     },
     backRightBtnRight: {
         backgroundColor: 'red',

@@ -8,6 +8,7 @@ import {
     Item,
     Input,
     Text,
+    Button,
 } from 'native-base'
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, View } from 'react-native'
@@ -80,7 +81,12 @@ const UsersManagement = () => {
                             <Text note>{user.name}</Text>
                         </Body>
                         <Right style={{ alignContent: 'center' }}>
-                            <Ionicons name="ellipsis-horizontal" size={25} />
+                            <Button icon transparent>
+                                <Ionicons
+                                    name="ellipsis-horizontal"
+                                    size={25}
+                                />
+                            </Button>
                         </Right>
                     </ListItem>
                 ))}
