@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React, { useEffect } from 'react'
 import { Image } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
@@ -12,6 +12,8 @@ import Profile from '../components/profile/Profile'
 import FormAdd from '../components/add/FormAdd'
 import Validation from '../components/profile/admin/Validation'
 import UsersManagement from '../components/profile/admin/UsersManagement'
+import { connect } from 'react-redux'
+import _ from 'lodash'
 
 const Logo = () => {
     return (
@@ -173,14 +175,19 @@ const AppTabsScreen = () => {
     )
 }
 
-export const Nav = () => {
-    const signIn = true
-
+export const Nav = ({ user }) => {
     return (
         <NavigationContainer>
-            {signIn ? <AppTabsScreen /> : <AuthStackScreen />}
+            {_.isEmpty(user) ? <AuthStackScreen /> : <AppTabsScreen />}
         </NavigationContainer>
     )
 }
 
-export default Nav
+// export default Nav
+const mapStateToProps = (state) => {
+    return {
+        user: state.user,
+    }
+}
+
+export default connect(mapStateToProps)(Nav)

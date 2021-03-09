@@ -1,27 +1,33 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { StyleSheet, View, Image } from 'react-native'
 import { Item, Input, Button, Text } from 'native-base'
-import axios from 'axios';
+import axios from 'axios'
+import { connect } from 'react-redux'
+import { addUser } from '../../store/actions'
 
+const SignIn = ({ addUser }) => {
+    const [mail, setMail] = useState('')
+    const [password, setPassword] = useState('')
 
+    const handleSubmit = () => {
+        connexion()
+    }
 
-const SignIn = ({ navigation }) => {
-
-    function Connection () {
-        axios.post('http://localhost:8080/connection', {
-            mail: 'yoo',
-            password: 'a'
-        })
+    const connexion = () => {
+        axios
+            .post('http://localhost:8080/connection', {
+                mail: mail,
+                password: password,
+            })
             .then(function (response) {
-                console.log(response);
-                console.log(response.data.token) // cette variable doit être accessible partout !!!!!!!!!!!!!!
-                console.log(response.data.userId) // celle-ci aussi 
-
+                console.log(response)
+                if (response.data !== 'NOK') {
+                    addUser(response.data)
+                }
             })
             .catch(function (error) {
-                console.log(error);
-            });
-
+                console.log(error)
+            })
     }
 
     return (
@@ -39,24 +45,21 @@ const SignIn = ({ navigation }) => {
             </View>
             <View style={{ flex: 2 }}>
                 <Item rounded style={styles.email}>
-                    <Input placeholder="Addresse mail" />
+                    <Input
+                        placeholder="Addresse mail"
+                        value={mail}
+                        onChangeText={(text) => setMail(text)}
+                    />
                 </Item>
                 <Item rounded style={styles.password}>
-                    <Input placeholder="Mot de passe" />
+                    <Input
+                        placeholder="Mot de passe"
+                        value={password}
+                        onChangeText={(text) => setPassword(text)}
+                        secureTextEntry={true}
+                    />
                 </Item>
-                <Button
-                    rounded
-                    style={styles.button}
-                    // onPress={() =>
-                    // navigation.navigate(
-                    //     'HomeStackScreen',
-                    //     {},
-                    //     NavigationActions.navigate({
-                    //         routeName: 'Home',
-                    //     }),
-                    // )
-                    // }
-                >
+                <Button rounded style={styles.button} onPress={handleSubmit}>
                     <Text>Se connecter</Text>
                 </Button>
                 <View style={styles.signUp}>
@@ -74,7 +77,7 @@ const SignIn = ({ navigation }) => {
     )
 }
 
-export default SignIn
+export default connect(null, { addUser })(SignIn)
 
 const styles = StyleSheet.create({
     container: {

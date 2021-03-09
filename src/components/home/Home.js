@@ -9,9 +9,9 @@ import {
     ActivityIndicator,
 } from 'react-native'
 import Swiper from 'react-native-deck-swiper'
-// import { useEffect } from 'react/cjs/react.development'
+import { connect } from 'react-redux'
 
-const Home = () => {
+const Home = ({ user }) => {
     const [loader, setLoader] = useState(true)
     const [disquettes, setDisquettes] = useState()
 
@@ -40,6 +40,7 @@ const Home = () => {
     }
 
     useEffect(() => {
+        console.log('user from store', user)
         getAllDisquette().then((allDisquettes) =>
             setDisquettes(
                 allDisquettes.filter((disquette) => disquette.isValid === 1),
@@ -269,4 +270,10 @@ const styles = StyleSheet.create({
     },
 })
 
-export default Home
+const mapStateToProps = (state) => {
+    return {
+        user: state.user,
+    }
+}
+
+export default connect(mapStateToProps)(Home)

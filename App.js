@@ -4,6 +4,8 @@ import Nav from './src/navigation/Navigation'
 import { useFonts, Barlow_200ExtraLight } from '@expo-google-fonts/barlow'
 import { Ionicons } from '@expo/vector-icons'
 import { ActivityIndicator, SafeAreaView, StyleSheet } from 'react-native'
+import { Provider } from 'react-redux'
+import Store from './src/store/store'
 
 const App = () => {
     const [loaded] = useFonts({
@@ -17,9 +19,11 @@ const App = () => {
         return <ActivityIndicator size="large" />
     }
     return (
-        <SafeAreaView style={styles.container}>
-            <Nav />
-        </SafeAreaView>
+        <Provider store={Store}>
+            <SafeAreaView style={styles.container}>
+                <Nav />
+            </SafeAreaView>
+        </Provider>
     )
 }
 

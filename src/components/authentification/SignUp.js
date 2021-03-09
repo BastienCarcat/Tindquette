@@ -1,27 +1,35 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { StyleSheet, View, Image } from 'react-native'
-import { Item, Input, Button, Text } from 'native-base'
+import { Item, Input, Button, Text, Form } from 'native-base'
 import { NativeViewGestureHandler } from 'react-native-gesture-handler'
-import axios from 'axios';
+import axios from 'axios'
 const SignIn = ({ navigation }) => {
+    const [pseudo, setPseudo] = useState('')
+    const [mail, setMail] = useState('')
+    const [password, setPassword] = useState('')
 
-    function NewUser () {
-        axios.post('http://localhost:8080/user', {
-            mail: 'gregrrrr',
-            pseudo: 'gregos',
-            password: 'a',
-            isAdmin: 0
-
-        })
-            .then(function (response) {
-                console.log(response);
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+    const handleSubmit = () => {
+        newUser()
     }
 
-
+    const newUser = () => {
+        axios
+            .post('http://localhost:8080/user', {
+                mail: mail,
+                pseudo: pseudo,
+                password: password,
+                isAdmin: 0,
+            })
+            .then(function (response) {
+                console.log(response)
+                if (response.data === 'OK') {
+                    navigation.navigate('SignIn')
+                }
+            })
+            .catch(function (error) {
+                console.log(error)
+            })
+    }
 
     return (
         <View style={styles.container}>
@@ -37,30 +45,37 @@ const SignIn = ({ navigation }) => {
                 />
             </View>
             <View style={{ flex: 2 }}>
-                <Item rounded style={styles.width}>
-                    <Input placeholder="Pseudo" />
-                </Item>
-                <Item rounded style={styles.margin}>
-                    <Input placeholder="Adresse mail" />
-                </Item>
-                <Item rounded style={styles.margin}>
-                    <Input placeholder="Mot de passe" />
-                </Item>
-                <Button
-                    rounded
-                    style={styles.button}
-                    // onPress={() =>
-                    // navigation.navigate(
-                    //     'HomeStackScreen',
-                    //     {},
-                    //     NavigationActions.navigate({
-                    //         routeName: 'Home',
-                    //     }),
-                    // )
-                    // }
-                >
-                    <Text>S'inscrire</Text>
-                </Button>
+                <Form>
+                    <Item rounded style={styles.width}>
+                        <Input
+                            placeholder="Pseudo"
+                            value={pseudo}
+                            onChangeText={(text) => setPseudo(text)}
+                        />
+                    </Item>
+                    <Item rounded style={styles.margin}>
+                        <Input
+                            placeholder="Adresse mail"
+                            value={mail}
+                            onChangeText={(text) => setMail(text)}
+                        />
+                    </Item>
+                    <Item rounded style={styles.margin}>
+                        <Input
+                            placeholder="Mot de passe"
+                            secureTextEntry={true}
+                            value={password}
+                            onChangeText={(text) => setPassword(text)}
+                        />
+                    </Item>
+                    <Button
+                        rounded
+                        style={styles.button}
+                        onPress={handleSubmit}
+                    >
+                        <Text>S'inscrire</Text>
+                    </Button>
+                </Form>
             </View>
             <Text style={styles.footer}>Tindquette</Text>
         </View>
