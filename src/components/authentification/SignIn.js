@@ -1,8 +1,29 @@
 import React from 'react'
 import { StyleSheet, View, Image } from 'react-native'
 import { Item, Input, Button, Text } from 'native-base'
+import axios from 'axios';
+
+
 
 const SignIn = ({ navigation }) => {
+
+    function Connection () {
+        axios.post('http://localhost:8080/connection', {
+            mail: 'yoo',
+            password: 'a'
+        })
+            .then(function (response) {
+                console.log(response);
+                console.log(response.data.token) // cette variable doit être accessible partout !!!!!!!!!!!!!!
+                console.log(response.data.userId) // celle-ci aussi 
+
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+
+    }
+
     return (
         <View style={styles.container}>
             <View
