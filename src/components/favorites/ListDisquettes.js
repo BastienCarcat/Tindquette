@@ -41,23 +41,24 @@ const ListDisquettes = () => {
         getFavorites().then((favorites) => setData(favorites))
     }, [])
 
-    // function RecoverMyFavoris() {
+    // function RecoverMyFavoris () {
     //     // ICI ON RECUPERA LE TOKEN QU'ON A EU A LA CONNECTION
-    //     const token =
-    //         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE4LCJpYXQiOjE2MTUyODE2MTgsImV4cCI6MTYxNTI5NjAxOH0.I34ibHwo12YazrYVGbUSp1WU7Xu3YHG718_o1ntVerI'
+    //     const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE4LCJpYXQiOjE2MTUyODE2MTgsImV4cCI6MTYxNTI5NjAxOH0.I34ibHwo12YazrYVGbUSp1WU7Xu3YHG718_o1ntVerI"
     //     const config = {
-    //         headers: { Authorization: 'Bearer ' + token },
-    //     }
+
+    //         headers: { Authorization: 'Bearer ' + token }
+    //     };
     //     const userId = 18 // ID UTILISATEUR RECUPERER A LA CONNEXION
-    //     axios
-    //         .get('http://localhost:8081/favori/' + userId, config)
+    //     axios.get('http://localhost:8081/favori/' + userId, config)
     //         .then(function (response) {
-    //             console.log(response)
+    //             console.log(response.data[0].content) // Contenue de la premiere disquette
+    //             console.log(response.data[0].idDisquette) // id de la premiere disquette
     //         })
     //         .catch(function (error) {
-    //             console.log(error)
-    //         })
+    //             console.log(error);
+    //         });
     // }
+
     // function DeleteMyFavori() {
     //     // ICI ON RECUPERA LE TOKEN QU'ON A EU A LA CONNECTION
     //     const token =

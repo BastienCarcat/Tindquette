@@ -13,7 +13,7 @@ import {
 import React, { useEffect, useState } from 'react'
 import { StyleSheet, View, ActivityIndicator } from 'react-native'
 import _ from 'lodash'
-import axios from 'axios';
+import axios from 'axios'
 
 const UsersManagement = () => {
     const [searchTerm, setSearchTerm] = useState('')
@@ -44,18 +44,11 @@ const UsersManagement = () => {
         )
     }, [])
 
-
-
-
-
-
-
-
     useEffect(() => {
         setSearchResult(data)
     }, [data])
     // function RecoverUser () {
-    //     // ICI ON RECUPERA LE TOKEN QU'ON A EU A LA CONNECTION  
+    //     // ICI ON RECUPERA LE TOKEN QU'ON A EU A LA CONNECTION
     //     const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE4LCJpYXQiOjE2MTUyODE2MTgsImV4cCI6MTYxNTI5NjAxOH0.I34ibHwo12YazrYVGbUSp1WU7Xu3YHG718_o1ntVerI"
     //     const config = {
     //         headers: { Authorization: 'Bearer ' + token }
@@ -71,7 +64,7 @@ const UsersManagement = () => {
     //         });
     // }
     // function DeleteMyFavori () {
-    //     // ICI ON RECUPERA LE TOKEN QU'ON A EU A LA CONNECTION  
+    //     // ICI ON RECUPERA LE TOKEN QU'ON A EU A LA CONNECTION
     //     const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE4LCJpYXQiOjE2MTUyODE2MTgsImV4cCI6MTYxNTI5NjAxOH0.I34ibHwo12YazrYVGbUSp1WU7Xu3YHG718_o1ntVerI"
     //     axios.delete('http://localhost:8081/user', {
     //         headers: {
@@ -87,8 +80,6 @@ const UsersManagement = () => {
     //         .catch(function (error) {
     //             console.log(error);
     //         });
-
-
 
     // }
 
@@ -112,31 +103,6 @@ const UsersManagement = () => {
 
     return (
         <View style={styles.container}>
-            <List style={styles.list}>
-                <ListItem itemDivider style={styles.search}>
-                    <Text style={styles.users}>Utilisateurs</Text>
-                    <Item rounded style={styles.input}>
-                        <Input
-                            placeholder="Rechercher"
-                            onChangeText={(text) => setSearchTerm(text)}
-                            value={searchTerm}
-                        />
-                    </Item>
-                </ListItem>
-                {_.map(searchResult, (user, index) => (
-                    <ListItem key={index}>
-                        <Body>
-                            <Text>{user.pseudo}</Text>
-                            <Text note>{user.name}</Text>
-                        </Body>
-                        <Right style={{ alignContent: 'center' }}>
-                            <Button icon transparent  >
-                                <Ionicons
-                                    name="ellipsis-horizontal"
-                                    size={25}
-                                />
-                            </Button>
-                        </Right>
             {loader ? (
                 <ActivityIndicator size="large" />
             ) : (

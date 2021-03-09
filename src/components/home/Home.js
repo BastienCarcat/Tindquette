@@ -47,13 +47,10 @@ const Home = () => {
         )
     }, [])
 
-
-
-
     // function GetAllDisquette () {
     //     axios.get('http://localhost:8081/getAllDisquette')
     //         .then(function (response) {
-    //             console.log(response.data[0].id); //RECUPERATION DE L 'ID DE LA DISQUETTE A L'INDEX 0 
+    //             console.log(response.data[0].id); //RECUPERATION DE L 'ID DE LA DISQUETTE A L'INDEX 0
     //             console.log(response.data[0].content); // RECUPERATION DU CONTENU DE LA DISQUETTE
     //         })
     //         .catch(function (error) {
@@ -62,7 +59,7 @@ const Home = () => {
 
     // }
     // function LikeDisquette () {
-    //     // ICI ON RECUPERA LE TOKEN QU'ON A EU A LA CONNEXION  
+    //     // ICI ON RECUPERA LE TOKEN QU'ON A EU A LA CONNEXION
     //     const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE4LCJpYXQiOjE2MTUyODE2MTgsImV4cCI6MTYxNTI5NjAxOH0.I34ibHwo12YazrYVGbUSp1WU7Xu3YHG718_o1ntVerI"
     //     const config = {
 
@@ -80,6 +77,7 @@ const Home = () => {
     //         config
     //     ).then(console.log).catch(console.log);
     // }
+
     return (
         <View style={styles.container}>
             {loader ? (
@@ -91,20 +89,6 @@ const Home = () => {
                     renderCard={(card) => {
                         console.log('card', card)
                         return (
-                            // <View style={styles.card}>
-                            //     <Text style={styles.text}>{card}</Text>
-                            //     <View style={styles.container_button}>
-                            //         <Button
-                            //             transparent
-                            //             style={styles.dislike_button}
-                            //         >
-                            //             <Ionicons size={60} name="close-circle" />
-                            //         </Button>
-                            //         <Button transparent style={styles.like_button}>
-                            //             <Ionicons size={60} name="heart-circle" />
-                            //         </Button>
-                            //     </View>
-                            // </View>
                             <>
                                 {card && (
                                     <Card style={styles.card}>
@@ -251,81 +235,6 @@ const Home = () => {
                     stackSize={3}
                 ></Swiper>
             )}
-                                                "
-                                            </Text>
-                                            <Text style={styles.disquette}>
-                                                {card}
-                                            </Text>
-                                            <Text
-                                                style={{
-                                                    fontSize: 60,
-                                                    alignSelf: 'flex-end',
-                                                }}
-                                            >
-                                                "
-                                            </Text>
-                                        </Body>
-                                    </CardItem>
-                                    <CardItem
-                                        footer
-                                        style={{
-                                            flex: 1,
-                                            justifyContent: 'space-around',
-                                            backgroundColor: 'transparent',
-                                        }}
-                                    >
-                                        <TouchableOpacity
-                                            style={{
-                                                borderWidth: 1,
-                                                borderColor: 'transparent',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                width: 100,
-                                                height: 100,
-                                                backgroundColor: 'transparent',
-                                                borderRadius: 100,
-                                            }}
-                                        >
-                                            <Ionicons
-                                                name={'close-circle-outline'}
-                                                size={90}
-                                                color="#E03763"
-                                            />
-                                        </TouchableOpacity>
-                                        <TouchableOpacity
-                                            style={{
-                                                borderWidth: 1,
-                                                borderColor: 'transparent',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                width: 100,
-                                                height: 100,
-                                                backgroundColor: 'transparent',
-                                                borderRadius: 100,
-                                            }}
-                                        >
-                                            <Ionicons 
-                                                name={'heart-circle-outline'}
-                                                size={90}
-                                                color="#00B990"
-                                            />
-                                        </TouchableOpacity>
-                                    </CardItem>
-                                </LinearGradient>
-                            </LinearGradient>
-                        </Card>
-                    )
-                }}
-                onSwiped={(cardIndex) => {
-                    console.log(cardIndex)
-                }}
-                onSwipedAll={() => {
-                    console.log('onSwipedAll')
-                }}
-                cardIndex={0}
-                backgroundColor={'#f4f4f4'}
-                stackSize={3}
-            ></Swiper>
         </View>
     )
 }
