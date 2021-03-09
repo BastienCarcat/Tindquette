@@ -1,56 +1,72 @@
 import { Body, Button, Card, CardItem, Icon, Text } from 'native-base'
-import React from 'react'
-import { FlatList, StyleSheet, View } from 'react-native'
+import React, { useState, useEffect } from 'react'
+import { FlatList, StyleSheet, View, ActivityIndicator } from 'react-native'
 
 const Validation = () => {
-    const data = [
-        {
-            id: '1',
-            content: 'Ceci est une disquette pas très terrible mais bon ...',
-            isValid: true,
-        },
-        {
-            id: '2',
-            content: 'Ceci est une disquette pas très terrible mais bon ... 2',
-            isValid: true,
-        },
-        {
-            id: '3',
-            content: 'Ceci est une disquette pas très terrible mais bon ... 3',
-            isValid: true,
-        },
-        {
-            id: '4',
-            content: 'Ceci est une disquette pas très terrible mais bon ... 4',
-            isValid: true,
-        },
-    ]
+    const [loader, setLoader] = useState(true)
+    const [disquettes, setDisquettes] = useState()
+
+    const getAllDisquette = async () => {
+        try {
+            let response = await fetch(
+                'http://localhost:8080/getAllDisquette/',
+                {
+                    method: 'GET',
+                    mode: 'cors',
+                    cache: 'no-cache',
+                },
+            )
+            let json = await response.json()
+            setTimeout(() => {
+                setLoader(false)
+            })
+            return json
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    useEffect(() => {
+        getAllDisquette().then((allDisquettes) =>
+            setDisquettes(
+                allDisquettes.filter((disquette) => disquette.isValid === 0),
+            ),
+        )
+    }, [])
 
     return (
         <View style={styles.container}>
-            <FlatList
-                style={styles.list}
-                data={data}
-                renderItem={({ item }) => (
-                    <Card style={styles.card}>
-                        <CardItem>
-                            <Body>
-                                <Text>{item.content}</Text>
-                            </Body>
-                        </CardItem>
-                        <CardItem footer style={styles.footer}>
-                            <Button iconLeft danger>
-                                <Icon name="trash" />
-                                <Text>Refuser</Text>
-                            </Button>
-                            <Button iconLeft success>
-                                <Icon name="checkmark" />
-                                <Text>Accepter</Text>
-                            </Button>
-                        </CardItem>
-                    </Card>
-                )}
-            />
+            {loader ? (
+                <ActivityIndicator size="large" />
+            ) : (
+                <FlatList
+                    style={styles.list}
+                    data={disquettes}
+                    renderItem={({ item }) => (
+                        <Card style={styles.card}>
+                            <CardItem>
+                                <Body
+                                    style={{
+                                        alignItems: 'center',
+                                    }}
+                                >
+                                    <Text>{item.content}</Text>
+                                </Body>
+                            </CardItem>
+                            <CardItem footer style={styles.footer}>
+                                <Button iconLeft danger>
+                                    <Icon name="trash" />
+                                    <Text>Refuser</Text>
+                                </Button>
+                                <Button iconLeft success>
+                                    <Icon name="checkmark" />
+                                    <Text>Accepter</Text>
+                                </Button>
+                            </CardItem>
+                        </Card>
+                    )}
+                />
+            )}
         </View>
     )
 }

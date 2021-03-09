@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import {
     StyleSheet,
     View,
@@ -6,19 +6,40 @@ import {
     Animated,
     TouchableHighlight,
     TouchableOpacity,
+    ActivityIndicator,
 } from 'react-native'
 import { SwipeListView } from 'react-native-swipe-list-view'
 import { Ionicons } from '@expo/vector-icons'
 
 const ListDisquettes = () => {
-    const [data, setdata] = useState(
-        Array(20)
-            .fill('')
-            .map((_, i) => ({
-                key: `${i}`,
-                text: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tincidunt, velit ut euismod tristique, ex ante erat #${i}`,
-            })),
-    )
+    const [data, setData] = useState([])
+    const [loader, setLoader] = useState(true)
+
+    const idUser = 1
+
+    const getFavorites = async () => {
+        try {
+            let response = await fetch(
+                `http://localhost:8080/favori/${idUser}`,
+                {
+                    method: 'GET',
+                    mode: 'cors',
+                    cache: 'no-cache',
+                },
+            )
+            let json = await response.json()
+            setTimeout(() => {
+                setLoader(false)
+            })
+            return json
+        } catch (error) {
+            console.error(error)
+        }
+    }
+
+    useEffect(() => {
+        getFavorites().then((favorites) => setData(favorites))
+    }, [])
 
     const onRowDidOpen = (rowKey) => {
         console.log('This row opened', rowKey)
@@ -49,9 +70,9 @@ const ListDisquettes = () => {
     const deleteRow = (rowMap, rowKey) => {
         closeRow(rowMap, rowKey)
         const newData = [...data]
-        const prevIndex = data.findIndex((item) => item.key === rowKey)
+        const prevIndex = data.findIndex((item) => item.id === rowKey)
         newData.splice(prevIndex, 1)
-        setdata(newData)
+        setData(newData)
     }
 
     const VisibleItem = ({
@@ -76,7 +97,7 @@ const ListDisquettes = () => {
                 <TouchableHighlight style={styles.rowFrontVisible}>
                     <View>
                         <Text style={styles.title} numberOfLines={3}>
-                            {data.item.text}
+                            {data.item.content}
                         </Text>
                     </View>
                 </TouchableHighlight>
@@ -91,7 +112,7 @@ const ListDisquettes = () => {
             <VisibleItem
                 data={data}
                 rowHeightAnimatedValue={rowHeightAnimatedValue}
-                removeRow={() => deleteRow(rowMap, data.item.key)}
+                removeRow={() => deleteRow(rowMap, data.item.id)}
             />
         )
     }
@@ -183,10 +204,10 @@ const ListDisquettes = () => {
                 rowActionAnimatedValue={rowActionAnimatedValue}
                 rowHeightAnimatedValue={rowHeightAnimatedValue}
                 onClose={() => {
-                    closeRow(rowMap, data.item.key)
+                    closeRow(rowMap, data.item.id)
                 }}
                 onDelete={() => {
-                    deleteRow(rowMap, data.item.key)
+                    deleteRow(rowMap, data.item.id)
                 }}
             />
         )
@@ -194,23 +215,27 @@ const ListDisquettes = () => {
 
     return (
         <View style={styles.container}>
-            <SwipeListView
-                data={data}
-                renderItem={renderItem}
-                renderHiddenItem={renderHiddenItem}
-                leftOpenValue={75}
-                rightOpenValue={-150}
-                disableRightSwipe
-                onRowDidOpen={onRowDidOpen}
-                leftActivationValue={100}
-                rightActivationValue={-200}
-                leftActionValue={0}
-                rightActionValue={-500}
-                onLeftAction={onLeftAction}
-                onRightAction={onRightAction}
-                onLeftActionStatusChange={onLeftActionStatusChange}
-                onRightActionStatusChange={onRightActionStatusChange}
-            />
+            {loader ? (
+                <ActivityIndicator size="large" />
+            ) : (
+                <SwipeListView
+                    data={data}
+                    renderItem={renderItem}
+                    renderHiddenItem={renderHiddenItem}
+                    leftOpenValue={75}
+                    rightOpenValue={-150}
+                    disableRightSwipe
+                    onRowDidOpen={onRowDidOpen}
+                    leftActivationValue={100}
+                    rightActivationValue={-200}
+                    leftActionValue={0}
+                    rightActionValue={-500}
+                    onLeftAction={onLeftAction}
+                    onRightAction={onRightAction}
+                    onLeftActionStatusChange={onLeftActionStatusChange}
+                    onRightActionStatusChange={onRightActionStatusChange}
+                />
+            )}
         </View>
     )
 }
@@ -264,6 +289,7 @@ const styles = StyleSheet.create({
         top: 0,
         width: 75,
         paddingRight: 17,
+        height: 85,
     },
     backRightBtnLeft: {
         backgroundColor: '#1f65ff',
