@@ -4,8 +4,42 @@ import { Body, Card, CardItem, Text } from 'native-base'
 import React from 'react'
 import { StyleSheet, TouchableOpacity, View } from 'react-native'
 import Swiper from 'react-native-deck-swiper'
-
+import axios from 'axios';
 const Home = () => {
+
+    function GetAllDisquette () {
+        axios.get('http://localhost:8081/getAllDisquette')
+            .then(function (response) {
+                console.log(response.data[0].id); //RECUPERATION DE L 'ID DE LA DISQUETTE A L'INDEX 0 
+                console.log(response.data[0].content); // RECUPERATION DU CONTENU DE LA DISQUETTE
+
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+
+    }
+    function LikeDisquette () {
+        // ICI ON RECUPERA LE TOKEN QU'ON A EU A LA CONNEXION  
+        const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE4LCJpYXQiOjE2MTUyODE2MTgsImV4cCI6MTYxNTI5NjAxOH0.I34ibHwo12YazrYVGbUSp1WU7Xu3YHG718_o1ntVerI"
+        const config = {
+
+            headers: { Authorization: 'Bearer ' + token }
+        };
+
+        const bodyParameters = {
+            idDisquette: 18, //ICI ON RECUPERA L'ID DE LA DISQUETTE QU'ON VEUT LIKER
+            userId: 18,//ICI ON RECUPERA LE USER ID QU'ON A EU A LA CONNEXION
+        };
+
+        axios.post(
+            'http://localhost:8081/favori',
+            bodyParameters,
+            config
+        ).then(console.log).catch(console.log);
+    }
+
+
     return (
         <View style={styles.container}>
             <Swiper
@@ -148,7 +182,7 @@ const Home = () => {
                                                 borderRadius: 100,
                                             }}
                                         >
-                                            <Ionicons
+                                            <Ionicons 
                                                 name={'heart-circle-outline'}
                                                 size={90}
                                                 color="#00B990"

@@ -10,6 +10,7 @@ import {
     TouchableOpacity,
 } from 'react-native'
 import { Ionicons } from '@expo/vector-icons'
+import axios from 'axios';
 
 const FormAdd = () => {
     const DismissKeyboard = ({ children }) => (
@@ -17,6 +18,26 @@ const FormAdd = () => {
             {children}
         </TouchableWithoutFeedback>
     )
+
+    function AddDisquette () {
+        // ICI ON RECUPERA LE TOKEN QU'ON A EU A LA CONNECTION  
+        const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE4LCJpYXQiOjE2MTUyODE2MTgsImV4cCI6MTYxNTI5NjAxOH0.I34ibHwo12YazrYVGbUSp1WU7Xu3YHG718_o1ntVerI"
+        const config = {
+
+            headers: { Authorization: 'Bearer ' + token }
+        };
+
+        const bodyParameters = {
+            content: "lorem ipsum ijiofez fzhf",
+            userId: 18,//ICI ON RECUPERA LE USER ID QU'ON A EU A LA CONNEXION
+        };
+
+        axios.post(
+            'http://localhost:8081/disquette',
+            bodyParameters,
+            config
+        ).then(console.log).catch(console.log);
+    }
 
     return (
         <DismissKeyboard>
@@ -100,6 +121,7 @@ const FormAdd = () => {
                                         name={'checkmark-circle-outline'}
                                         size={90}
                                         color="#00B990"
+                                        onPress={() => AddDisquette()}
                                     />
                                 </TouchableOpacity>
                             </CardItem>

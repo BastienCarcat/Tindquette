@@ -174,7 +174,7 @@ const AppTabsScreen = () => {
 }
 
 export const Nav = () => {
-    const signIn = false
+    const signIn = true
 
     return (
         <NavigationContainer>

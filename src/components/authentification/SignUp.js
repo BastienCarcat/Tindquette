@@ -1,8 +1,28 @@
 import React from 'react'
 import { StyleSheet, View, Image } from 'react-native'
 import { Item, Input, Button, Text } from 'native-base'
-
+import { NativeViewGestureHandler } from 'react-native-gesture-handler'
+import axios from 'axios';
 const SignIn = ({ navigation }) => {
+
+    function NewUser () {
+        axios.post('http://localhost:8080/user', {
+            mail: 'gregrrrr',
+            pseudo: 'gregos',
+            password: 'a',
+            isAdmin: 0
+
+        })
+            .then(function (response) {
+                console.log(response);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+
+
+
     return (
         <View style={styles.container}>
             <View

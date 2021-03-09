@@ -9,7 +9,7 @@ import {
 } from 'react-native'
 import { SwipeListView } from 'react-native-swipe-list-view'
 import { Ionicons } from '@expo/vector-icons'
-
+import axios from 'axios';
 const ListDisquettes = () => {
     const [data, setdata] = useState(
         Array(20)
@@ -19,6 +19,46 @@ const ListDisquettes = () => {
                 text: `Lorem ipsum dolor sit amet, consectetur adipiscing elit. Cras tincidunt, velit ut euismod tristique, ex ante erat #${i}`,
             })),
     )
+    function RecoverMyFavoris () {
+        // ICI ON RECUPERA LE TOKEN QU'ON A EU A LA CONNECTION  
+        const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE4LCJpYXQiOjE2MTUyODE2MTgsImV4cCI6MTYxNTI5NjAxOH0.I34ibHwo12YazrYVGbUSp1WU7Xu3YHG718_o1ntVerI"
+        const config = {
+
+            headers: { Authorization: 'Bearer ' + token }
+        };
+        const userId = 18 // ID UTILISATEUR RECUPERER A LA CONNEXION
+        axios.get('http://localhost:8081/favori/' + userId, config)
+            .then(function (response) {
+                console.log(response);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+    function DeleteMyFavori () {
+                        // ICI ON RECUPERA LE TOKEN QU'ON A EU A LA CONNECTION  
+        const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE4LCJpYXQiOjE2MTUyODE2MTgsImV4cCI6MTYxNTI5NjAxOH0.I34ibHwo12YazrYVGbUSp1WU7Xu3YHG718_o1ntVerI"
+        
+        axios.delete('http://localhost:8081/favori', {
+            headers: {
+                Authorization: 'Bearer ' + token
+            },
+            data: {
+                userId: 18, // ICI ON RECUPERA L' ID DE L'UTILISATEUR QU'ON A RECUPERER A LA CONNEXION
+                idDisquette: 18,//ICI ON RECUPERA L'ID DE LA DISQUETTE QU'ON VEUT SUPPRIMER 
+            }
+        }).then(function (response) {
+            console.log(response);
+
+
+        })
+            .catch(function (error) {
+                console.log(error);
+            });
+
+            
+
+    }
 
     const onRowDidOpen = (rowKey) => {
         console.log('This row opened', rowKey)
