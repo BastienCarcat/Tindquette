@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import { Image } from 'react-native'
 import { NavigationContainer } from '@react-navigation/native'
 import { createStackNavigator } from '@react-navigation/stack'
@@ -176,9 +176,11 @@ const AppTabsScreen = () => {
 }
 
 export const Nav = ({ user }) => {
+    console.log('user', user)
     return (
         <NavigationContainer>
             {_.isEmpty(user) ? <AuthStackScreen /> : <AppTabsScreen />}
+            {/* {false ? <AuthStackScreen /> : <AppTabsScreen />} */}
         </NavigationContainer>
     )
 }

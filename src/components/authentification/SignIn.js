@@ -26,8 +26,9 @@ const SignIn = ({ addUser }) => {
                 }
             })
             .catch(function (error) {
-                console.log(error)
+                console.error(error)
             })
+        return null
     }
 
     return (

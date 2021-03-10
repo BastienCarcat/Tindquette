@@ -11,76 +11,67 @@ import {
 import { SwipeListView } from 'react-native-swipe-list-view'
 import { Ionicons } from '@expo/vector-icons'
 import axios from 'axios'
-const ListDisquettes = () => {
+import { connect } from 'react-redux'
+import { useIsFocused } from '@react-navigation/native'
+import _ from 'lodash'
+
+const ListDisquettes = ({ user }) => {
     const [data, setData] = useState([])
-    const [loader, setLoader] = useState(true)
+    const [loader, setLoader] = useState(false)
 
-    const idUser = 1
+    const token = user.token // ICI ON RECUPERA LE TOKEN QU'ON A EU A LA CONNECTION
+    const userId = user.userId // ID UTILISATEUR RECUPERER A LA CONNEXION
 
-    const getFavorites = async () => {
-        try {
-            let response = await fetch(
-                `http://localhost:8080/favori/${idUser}`,
-                {
-                    method: 'GET',
-                    mode: 'cors',
-                    cache: 'no-cache',
-                },
-            )
-            let json = await response.json()
-            setTimeout(() => {
-                setLoader(false)
-            })
-            return json
-        } catch (error) {
-            console.error(error)
-        }
-    }
+    const isFocused = useIsFocused()
+    useEffect(() => {
+        console.log('data', data)
+    }, [data])
 
     useEffect(() => {
-        getFavorites().then((favorites) => setData(favorites))
-    }, [])
+        if (isFocused) {
+            recoverMyFavoris()
+        }
+    }, [isFocused])
 
-    // function RecoverMyFavoris () {
-    //     // ICI ON RECUPERA LE TOKEN QU'ON A EU A LA CONNECTION
-    //     const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE4LCJpYXQiOjE2MTUyODE2MTgsImV4cCI6MTYxNTI5NjAxOH0.I34ibHwo12YazrYVGbUSp1WU7Xu3YHG718_o1ntVerI"
-    //     const config = {
+    const recoverMyFavoris = () => {
+        const config = {
+            headers: { Authorization: 'Bearer ' + token },
+        }
+        axios
+            .get('http://localhost:8081/favori/' + userId, config)
+            .then(function (response) {
+                const formatData = _.map(response.data, (item) => {
+                    return {
+                        key: item.idDisquette,
+                        text: item.content,
+                    }
+                })
+                setData(formatData)
+                setLoader(false)
+            })
+            .catch(function (error) {
+                console.error(error)
+            })
+    }
 
-    //         headers: { Authorization: 'Bearer ' + token }
-    //     };
-    //     const userId = 18 // ID UTILISATEUR RECUPERER A LA CONNEXION
-    //     axios.get('http://localhost:8081/favori/' + userId, config)
-    //         .then(function (response) {
-    //             console.log(response.data[0].content) // Contenue de la premiere disquette
-    //             console.log(response.data[0].idDisquette) // id de la premiere disquette
-    //         })
-    //         .catch(function (error) {
-    //             console.log(error);
-    //         });
-    // }
-
-    // function DeleteMyFavori() {
-    //     // ICI ON RECUPERA LE TOKEN QU'ON A EU A LA CONNECTION
-    //     const token =
-    //         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE4LCJpYXQiOjE2MTUyODE2MTgsImV4cCI6MTYxNTI5NjAxOH0.I34ibHwo12YazrYVGbUSp1WU7Xu3YHG718_o1ntVerI'
-
-    //     axios
-    //         .delete('http://localhost:8081/favori', {
-    //             headers: {
-    //                 Authorization: 'Bearer ' + token,
-    //             },
-    //             data: {
-    //                 userId: 18, // ICI ON RECUPERA L' ID DE L'UTILISATEUR QU'ON A RECUPERER A LA CONNEXION
-    //                 idDisquette: 18, //ICI ON RECUPERA L'ID DE LA DISQUETTE QU'ON VEUT SUPPRIMER
-    //             },
-    //         })
-    //         .then(function (response) {
-    //             console.log(response)
-    //         })
-    //         .catch(function (error) {
-    //             console.log(error)
-    //         })
-    // }
+    const deleteMyFavori = (idDisquette) => {
+        axios
+            .delete('http://localhost:8081/favori', {
+                headers: {
+                    Authorization: 'Bearer ' + token,
+                },
+                data: {
+                    userId: userId,
+                    idDisquette: idDisquette,
+                },
+            })
+            .then(function (response) {
+                console.log(response)
+            })
+            .catch(function (error) {
+                console.error(error)
+            })
+    }
 
     const onRowDidOpen = (rowKey) => {
         console.log('This row opened', rowKey)
@@ -111,9 +102,11 @@ const ListDisquettes = () => {
     const deleteRow = (rowMap, rowKey) => {
         closeRow(rowMap, rowKey)
         const newData = [...data]
-        const prevIndex = data.findIndex((item) => item.id === rowKey)
+        console.log('rowMap', rowMap)
+        const prevIndex = data.findIndex((item) => item.key === rowKey)
         newData.splice(prevIndex, 1)
         setData(newData)
+        deleteMyFavori(rowKey)
     }
 
     const VisibleItem = ({
@@ -138,7 +131,7 @@ const ListDisquettes = () => {
                 <TouchableHighlight style={styles.rowFrontVisible}>
                     <View>
                         <Text style={styles.title} numberOfLines={3}>
-                            {data.item.content}
+                            {data.item.text}
                         </Text>
                     </View>
                 </TouchableHighlight>
@@ -148,12 +141,12 @@ const ListDisquettes = () => {
 
     const renderItem = (data, rowMap) => {
         const rowHeightAnimatedValue = new Animated.Value(85)
-
+        console.log('data render item', data)
         return (
             <VisibleItem
                 data={data}
                 rowHeightAnimatedValue={rowHeightAnimatedValue}
-                removeRow={() => deleteRow(rowMap, data.item.id)}
+                removeRow={() => deleteRow(rowMap, data.item.key)}
             />
         )
     }
@@ -238,6 +231,8 @@ const ListDisquettes = () => {
         const rowActionAnimatedValue = new Animated.Value(75)
         const rowHeightAnimatedValue = new Animated.Value(85)
 
+        console.log('data.item.id hiddenItem', data)
+
         return (
             <HiddenItemWithActions
                 data={data}
@@ -245,10 +240,10 @@ const ListDisquettes = () => {
                 rowActionAnimatedValue={rowActionAnimatedValue}
                 rowHeightAnimatedValue={rowHeightAnimatedValue}
                 onClose={() => {
-                    closeRow(rowMap, data.item.id)
+                    closeRow(rowMap, data.item.key)
                 }}
                 onDelete={() => {
-                    deleteRow(rowMap, data.item.id)
+                    deleteRow(rowMap, data.item.key)
                 }}
             />
         )
@@ -281,7 +276,13 @@ const ListDisquettes = () => {
     )
 }
 
-export default ListDisquettes
+const mapStateToProps = (state) => {
+    return {
+        user: state.user,
+    }
+}
+
+export default connect(mapStateToProps)(ListDisquettes)
 
 const styles = StyleSheet.create({
     container: {

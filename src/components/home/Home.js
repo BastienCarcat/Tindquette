@@ -10,74 +10,70 @@ import {
 } from 'react-native'
 import Swiper from 'react-native-deck-swiper'
 import { connect } from 'react-redux'
+import axios from 'axios'
+import { useIsFocused } from '@react-navigation/native'
 
 const Home = ({ user }) => {
     const [loader, setLoader] = useState(true)
-    const [disquettes, setDisquettes] = useState()
+    const [disquettes, setDisquettes] = useState([])
+    const token = user.token // ICI ON RECUPERA LE TOKEN QU'ON A EU A LA CONNECTION
+    const userId = user.userId // ID UTILISATEUR RECUPERER A LA CONNEXION
 
     const useSwiper = useRef(null)
+    const handleOnSwipedRight = (idDisquette) => {
+        likeDisquette(idDisquette)
+        useSwiper.current.swipeRight()
+    }
     const handleOnSwipedLeft = () => useSwiper.current.swipeLeft()
-    const handleOnSwipedRight = () => useSwiper.current.swipeRight()
 
-    const getAllDisquette = async () => {
-        try {
-            let response = await fetch(
-                'http://localhost:8080/getAllDisquette/',
-                {
-                    method: 'GET',
-                    mode: 'cors',
-                    cache: 'no-cache',
-                },
-            )
-            let json = await response.json()
-            setTimeout(() => {
-                setLoader(false)
-            })
-            return json
-        } catch (error) {
-            console.error(error)
-        }
+    const isFocused = useIsFocused()
+
+    const handleLikeDisquette = (cardIndex) => {
+        const idDisquette = disquettes[cardIndex].id
+        likeDisquette(idDisquette)
     }
 
     useEffect(() => {
-        console.log('user from store', user)
-        getAllDisquette().then((allDisquettes) =>
-            setDisquettes(
-                allDisquettes.filter((disquette) => disquette.isValid === 1),
-            ),
-        )
-    }, [])
+        if (isFocused) {
+            getAllDisquette()
+        }
+    }, [isFocused])
 
-    // function GetAllDisquette () {
-    //     axios.get('http://localhost:8081/getAllDisquette')
-    //         .then(function (response) {
-    //             console.log(response.data[0].id); //RECUPERATION DE L 'ID DE LA DISQUETTE A L'INDEX 0
-    //             console.log(response.data[0].content); // RECUPERATION DU CONTENU DE LA DISQUETTE
-    //         })
-    //         .catch(function (error) {
-    //             console.log(error);
-    //         });
+    const getAllDisquette = () => {
+        axios
+            .get('http://localhost:8081/getAllDisquette')
+            .then(function (response) {
+                setDisquettes(
+                    response.data.filter(
+                        (disquette) => disquette.isValid === 1,
+                    ),
+                )
+                setLoader(false)
+            })
+            .catch(function (error) {
+                console.error(error)
+            })
+    }
 
-    // }
-    // function LikeDisquette () {
-    //     // ICI ON RECUPERA LE TOKEN QU'ON A EU A LA CONNEXION
-    //     const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE4LCJpYXQiOjE2MTUyODE2MTgsImV4cCI6MTYxNTI5NjAxOH0.I34ibHwo12YazrYVGbUSp1WU7Xu3YHG718_o1ntVerI"
-    //     const config = {
+    const likeDisquette = (idDisquette) => {
+        const config = {
+            headers: { Authorization: 'Bearer ' + token },
+        }
 
-    //         headers: { Authorization: 'Bearer ' + token }
-    //     };
+        const bodyParameters = {
+            idDisquette: idDisquette,
+            userId: userId,
+        }
 
-    //     const bodyParameters = {
-    //         idDisquette: 18, //ICI ON RECUPERA L'ID DE LA DISQUETTE QU'ON VEUT LIKER
-    //         userId: 18,//ICI ON RECUPERA LE USER ID QU'ON A EU A LA CONNEXION
-    //     };
-
-    //     axios.post(
-    //         'http://localhost:8081/favori',
-    //         bodyParameters,
-    //         config
-    //     ).then(console.log).catch(console.log);
-    // }
+        axios
+            .post('http://localhost:8081/favori', bodyParameters, config)
+            .then(function (response) {
+                console.log(response)
+            })
+            .catch(function (error) {
+                console.error(error)
+            })
+    }
 
     return (
         <View style={styles.container}>
@@ -88,7 +84,6 @@ const Home = ({ user }) => {
                     ref={useSwiper}
                     cards={disquettes}
                     renderCard={(card) => {
-                        console.log('card', card)
                         return (
                             <>
                                 {card && (
@@ -133,7 +128,6 @@ const Home = ({ user }) => {
                                                         >
                                                             "
                                                         </Text>
-                                                        {/* {console.log('card', card)} */}
                                                         <Text
                                                             style={
                                                                 styles.disquette
@@ -204,8 +198,10 @@ const Home = ({ user }) => {
                                                                 'transparent',
                                                             borderRadius: 100,
                                                         }}
-                                                        onPress={
-                                                            handleOnSwipedRight
+                                                        onPress={() =>
+                                                            handleOnSwipedRight(
+                                                                card.id,
+                                                            )
                                                         }
                                                     >
                                                         <Ionicons
@@ -225,9 +221,7 @@ const Home = ({ user }) => {
                         )
                     }}
                     verticalSwipe={false}
-                    onSwiped={(cardIndex) => {
-                        console.log(cardIndex)
-                    }}
+                    onSwipedRight={handleLikeDisquette}
                     onSwipedAll={() => {
                         console.log('onSwipedAll')
                     }}

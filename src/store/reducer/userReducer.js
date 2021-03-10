@@ -1,6 +1,8 @@
 import { ADD_USER, REMOVE_USER } from '../types'
 
-const initialState = { user: {} }
+const initialState = {
+    user: {},
+}
 
 const user = (state = initialState, action) => {
     switch (action.type) {

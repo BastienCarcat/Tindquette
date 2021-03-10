@@ -14,55 +14,44 @@ import React, { useEffect, useState } from 'react'
 import { StyleSheet, View, ActivityIndicator } from 'react-native'
 import _ from 'lodash'
 import axios from 'axios'
+import { useIsFocused } from '@react-navigation/native'
+import { connect } from 'react-redux'
 
-const UsersManagement = () => {
+const UsersManagement = ({ user }) => {
     const [searchTerm, setSearchTerm] = useState('')
     const [searchResult, setSearchResult] = useState([])
     const [loader, setLoader] = useState(true)
     const [data, setData] = useState(null)
+    const token = user.token // ICI ON RECUPERA LE TOKEN QU'ON A EU A LA CONNECTION
+    const userId = user.userId // ID UTILISATEUR RECUPERER A LA CONNEXION
 
-    const getAllUsers = async () => {
-        try {
-            let response = await fetch('http://localhost:8080/getAllUser/', {
-                method: 'GET',
-                mode: 'cors',
-                cache: 'no-cache',
-            })
-            let json = await response.json()
-            setTimeout(() => {
-                setLoader(false)
-            })
-            return json
-        } catch (error) {
-            console.error(error)
-        }
-    }
+    const isFocused = useIsFocused()
 
     useEffect(() => {
-        getAllUsers().then((allUsers) =>
-            setData(allUsers.filter((user) => user.isAdmin === 0)),
-        )
-    }, [])
+        if (isFocused) {
+            recoverUser()
+        }
+    }, [isFocused])
 
     useEffect(() => {
         setSearchResult(data)
     }, [data])
-    // function RecoverUser () {
-    //     // ICI ON RECUPERA LE TOKEN QU'ON A EU A LA CONNECTION
-    //     const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE4LCJpYXQiOjE2MTUyODE2MTgsImV4cCI6MTYxNTI5NjAxOH0.I34ibHwo12YazrYVGbUSp1WU7Xu3YHG718_o1ntVerI"
-    //     const config = {
-    //         headers: { Authorization: 'Bearer ' + token }
-    //     };
-    //     axios.get('http://localhost:8081/getAllUser', config)
-    //         .then(function (response) {
-    //             console.log(response.data[0].id); // ID DE L'utilisateur A L'INDEX 1
-    //             console.log(response.data[0].mail);
-    //             console.log(response.data[0].pseudo);
-    //         })
-    //         .catch(function (error) {
-    //             console.log(error);
-    //         });
-    // }
+
+    const recoverUser = () => {
+        const config = {
+            headers: { Authorization: 'Bearer ' + token },
+        }
+        axios
+            .get('http://localhost:8081/getAllUser', config)
+            .then(function (response) {
+                console.log(response.data)
+                setData(response.data.filter((user) => user.isAdmin === 0))
+                setLoader(false)
+            })
+            .catch(function (error) {
+                console.error(error)
+            })
+    }
     // function DeleteMyFavori () {
     //     // ICI ON RECUPERA LE TOKEN QU'ON A EU A LA CONNECTION
     //     const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE4LCJpYXQiOjE2MTUyODE2MTgsImV4cCI6MTYxNTI5NjAxOH0.I34ibHwo12YazrYVGbUSp1WU7Xu3YHG718_o1ntVerI"
@@ -78,7 +67,7 @@ const UsersManagement = () => {
     //         console.log(response);
     //     })
     //         .catch(function (error) {
-    //             console.log(error);
+    //             console.error(error);
     //         });
 
     // }
@@ -139,7 +128,13 @@ const UsersManagement = () => {
     )
 }
 
-export default UsersManagement
+const mapStateToProps = (state) => {
+    return {
+        user: state.user,
+    }
+}
+
+export default connect(mapStateToProps)(UsersManagement)
 
 const styles = StyleSheet.create({
     container: {

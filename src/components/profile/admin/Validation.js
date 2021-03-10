@@ -1,38 +1,36 @@
 import { Body, Button, Card, CardItem, Icon, Text } from 'native-base'
 import React, { useState, useEffect } from 'react'
 import { FlatList, StyleSheet, View, ActivityIndicator } from 'react-native'
+import { useIsFocused } from '@react-navigation/native'
+import axios from 'axios'
 
 const Validation = () => {
     const [loader, setLoader] = useState(true)
     const [disquettes, setDisquettes] = useState()
 
-    const getAllDisquette = async () => {
-        try {
-            let response = await fetch(
-                'http://localhost:8080/getAllDisquette/',
-                {
-                    method: 'GET',
-                    mode: 'cors',
-                    cache: 'no-cache',
-                },
-            )
-            let json = await response.json()
-            setTimeout(() => {
-                setLoader(false)
-            })
-            return json
-        } catch (error) {
-            console.error(error)
-        }
-    }
+    const isFocused = useIsFocused()
 
     useEffect(() => {
-        getAllDisquette().then((allDisquettes) =>
-            setDisquettes(
-                allDisquettes.filter((disquette) => disquette.isValid === 0),
-            ),
-        )
-    }, [])
+        if (isFocused) {
+            getAllDisquette()
+        }
+    }, [isFocused])
+
+    const getAllDisquette = () => {
+        axios
+            .get('http://localhost:8081/getAllDisquette')
+            .then(function (response) {
+                setDisquettes(
+                    response.data.filter(
+                        (disquette) => disquette.isValid === 0,
+                    ),
+                )
+                setLoader(false)
+            })
+            .catch(function (error) {
+                console.error(error)
+            })
+    }
 
     return (
         <View style={styles.container}>
