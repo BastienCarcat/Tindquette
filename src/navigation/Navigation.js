@@ -14,6 +14,7 @@ import Validation from '../components/profile/admin/Validation'
 import UsersManagement from '../components/profile/admin/UsersManagement'
 import { connect } from 'react-redux'
 import _ from 'lodash'
+import Account from '../components/profile/Account'
 
 const Logo = () => {
     return (
@@ -89,6 +90,11 @@ const ProfileStackScreen = () => {
             <ProfileStack.Screen
                 name="UsersManagement"
                 component={UsersManagement}
+                options={{ headerTitle: (props) => <Logo {...props} /> }}
+            />
+            <ProfileStack.Screen
+                name="Account"
+                component={Account}
                 options={{ headerTitle: (props) => <Logo {...props} /> }}
             />
         </ProfileStack.Navigator>
@@ -176,7 +182,6 @@ const AppTabsScreen = () => {
 }
 
 export const Nav = ({ user }) => {
-    console.log('user', user)
     return (
         <NavigationContainer>
             {_.isEmpty(user) ? <AuthStackScreen /> : <AppTabsScreen />}

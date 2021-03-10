@@ -25,10 +25,10 @@ const FormAdd = ({ user }) => {
     )
 
     const handleSubmit = () => {
-        AddDisquette()
+        addDisquette()
     }
 
-    function AddDisquette() {
+    const addDisquette = () => {
         const config = {
             headers: { Authorization: 'Bearer ' + token },
         }
@@ -42,7 +42,7 @@ const FormAdd = ({ user }) => {
             .post('http://localhost:8081/disquette', bodyParameters, config)
             .then(function (response) {
                 console.log(response)
-                if (response.data === 'OK') {
+                if (response.status === 200) {
                     setInput('')
                 }
             })

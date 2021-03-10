@@ -1,20 +1,20 @@
 import { Ionicons } from '@expo/vector-icons'
+import { useIsFocused } from '@react-navigation/native'
+import axios from 'axios'
+import _ from 'lodash'
 import {
     Body,
-    Left,
+    Button,
+    Input,
+    Item,
     List,
     ListItem,
     Right,
-    Item,
-    Input,
     Text,
-    Button,
 } from 'native-base'
 import React, { useEffect, useState } from 'react'
-import { StyleSheet, View, ActivityIndicator } from 'react-native'
-import _ from 'lodash'
-import axios from 'axios'
-import { useIsFocused } from '@react-navigation/native'
+import { ActivityIndicator, StyleSheet, View } from 'react-native'
+// import Dialog, { DialogButton, DialogContent } from 'react-native-popup-dialog'
 import { connect } from 'react-redux'
 
 const UsersManagement = ({ user }) => {
@@ -22,10 +22,17 @@ const UsersManagement = ({ user }) => {
     const [searchResult, setSearchResult] = useState([])
     const [loader, setLoader] = useState(true)
     const [data, setData] = useState(null)
+    const [visible, setVisible] = useState(false)
     const token = user.token // ICI ON RECUPERA LE TOKEN QU'ON A EU A LA CONNECTION
     const userId = user.userId // ID UTILISATEUR RECUPERER A LA CONNEXION
 
     const isFocused = useIsFocused()
+
+    const handleDelete = (userIdDelete) => {
+        console.log('userIdDelete', userIdDelete)
+        deleteUser(userIdDelete)
+        setData(data.filter((user) => user.id !== userIdDelete))
+    }
 
     useEffect(() => {
         if (isFocused) {
@@ -52,25 +59,25 @@ const UsersManagement = ({ user }) => {
                 console.error(error)
             })
     }
-    // function DeleteMyFavori () {
-    //     // ICI ON RECUPERA LE TOKEN QU'ON A EU A LA CONNECTION
-    //     const token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE4LCJpYXQiOjE2MTUyODE2MTgsImV4cCI6MTYxNTI5NjAxOH0.I34ibHwo12YazrYVGbUSp1WU7Xu3YHG718_o1ntVerI"
-    //     axios.delete('http://localhost:8081/user', {
-    //         headers: {
-    //             Authorization: 'Bearer ' + token
-    //         },
-    //         data: {
-    //             userId: 18, // ID DE L'ADMIN QUI VA SUPPRIMER L'utilisateur
-    //             userIdDelete: 1 // ID DE l'utilisateur à supprimer
-    //         }
-    //     }).then(function (response) {
-    //         console.log(response);
-    //     })
-    //         .catch(function (error) {
-    //             console.error(error);
-    //         });
 
-    // }
+    const deleteUser = (userIdDelete) => {
+        axios
+            .delete('http://localhost:8081/user', {
+                headers: {
+                    Authorization: 'Bearer ' + token,
+                },
+                data: {
+                    userId: userId, // ID DE L'ADMIN QUI VA SUPPRIMER L'utilisateur
+                    userIdDelete: userIdDelete, // ID DE l'utilisateur à supprimer
+                },
+            })
+            .then(function (response) {
+                console.log('user', response)
+            })
+            .catch(function (error) {
+                console.error(error)
+            })
+    }
 
     const getValue = (obj, path, defaultValue = null) => {
         if (_.has(obj, path)) {
@@ -113,12 +120,33 @@ const UsersManagement = ({ user }) => {
                                 <Text note>{user.mail}</Text>
                             </Body>
                             <Right style={{ alignContent: 'center' }}>
-                                <Button icon transparent>
+                                <Button
+                                    icon
+                                    transparent
+                                    // onPress={() => setVisible(true)}
+                                    onPress={() => handleDelete(user.id)}
+                                >
                                     <Ionicons
-                                        name="ellipsis-horizontal"
+                                        // name="ellipsis-horizontal"
+                                        name="trash-outline"
                                         size={25}
                                     />
                                 </Button>
+                                {/* <Dialog
+                                    visible={visible}
+                                    onTouchOutside={() => {
+                                        setVisible(false)
+                                    }}
+                                >
+                                    <DialogContent>
+                                        <DialogButton
+                                            text="Supprimer"
+                                            onPress={() =>
+                                                handleDelete(user.id)
+                                            }
+                                        />
+                                    </DialogContent>
+                                </Dialog> */}
                             </Right>
                         </ListItem>
                     ))}

@@ -3,12 +3,29 @@ import React, { useState, useEffect } from 'react'
 import { FlatList, StyleSheet, View, ActivityIndicator } from 'react-native'
 import { useIsFocused } from '@react-navigation/native'
 import axios from 'axios'
+import { connect } from 'react-redux'
 
-const Validation = () => {
+const Validation = ({ user }) => {
     const [loader, setLoader] = useState(true)
     const [disquettes, setDisquettes] = useState()
+    const token = user.token // ICI ON RECUPERA LE TOKEN QU'ON A EU A LA CONNECTION
+    const userId = user.userId // ID UTILISATEUR RECUPERER A LA CONNEXION
 
     const isFocused = useIsFocused()
+
+    const handleRefuse = (idDisquette) => {
+        deleteDisquette(idDisquette)
+        setDisquettes(
+            disquettes.filter((disquette) => disquette.id !== idDisquette),
+        )
+    }
+
+    const handleValidate = (idDisquette) => {
+        validateDisquette(idDisquette)
+        setDisquettes(
+            disquettes.filter((disquette) => disquette.id !== idDisquette),
+        )
+    }
 
     useEffect(() => {
         if (isFocused) {
@@ -26,6 +43,47 @@ const Validation = () => {
                     ),
                 )
                 setLoader(false)
+            })
+            .catch(function (error) {
+                console.error(error)
+            })
+    }
+
+    const deleteDisquette = (idDisquette) => {
+        axios
+            .delete('http://localhost:8081/deleteDisquette', {
+                headers: {
+                    Authorization: 'Bearer ' + token,
+                },
+                data: {
+                    idDisquette: idDisquette,
+                },
+            })
+            .then(function (response) {
+                console.log(response)
+            })
+            .catch(function (error) {
+                console.error(error)
+            })
+    }
+
+    const validateDisquette = (idDisquette) => {
+        const config = {
+            headers: { Authorization: 'Bearer ' + token },
+        }
+
+        const bodyParameters = {
+            idDisquette: idDisquette,
+        }
+
+        axios
+            .post(
+                'http://localhost:8081/acceptDisquette',
+                bodyParameters,
+                config,
+            )
+            .then(function (response) {
+                console.log(response)
             })
             .catch(function (error) {
                 console.error(error)
@@ -52,11 +110,19 @@ const Validation = () => {
                                 </Body>
                             </CardItem>
                             <CardItem footer style={styles.footer}>
-                                <Button iconLeft danger>
+                                <Button
+                                    iconLeft
+                                    danger
+                                    onPress={() => handleRefuse(item.id)}
+                                >
                                     <Icon name="trash" />
                                     <Text>Refuser</Text>
                                 </Button>
-                                <Button iconLeft success>
+                                <Button
+                                    iconLeft
+                                    success
+                                    onPress={() => handleValidate(item.id)}
+                                >
                                     <Icon name="checkmark" />
                                     <Text>Accepter</Text>
                                 </Button>
@@ -69,7 +135,13 @@ const Validation = () => {
     )
 }
 
-export default Validation
+const mapStateToProps = (state) => {
+    return {
+        user: state.user,
+    }
+}
+
+export default connect(mapStateToProps)(Validation)
 
 const styles = StyleSheet.create({
     container: {

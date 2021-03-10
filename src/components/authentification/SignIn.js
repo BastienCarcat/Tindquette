@@ -5,7 +5,7 @@ import axios from 'axios'
 import { connect } from 'react-redux'
 import { addUser } from '../../store/actions'
 
-const SignIn = ({ addUser }) => {
+const SignIn = ({ addUser, navigation }) => {
     const [mail, setMail] = useState('')
     const [password, setPassword] = useState('')
 
@@ -21,7 +21,7 @@ const SignIn = ({ addUser }) => {
             })
             .then(function (response) {
                 console.log(response)
-                if (response.data !== 'NOK') {
+                if (response.status === 200) {
                     addUser(response.data)
                 }
             })

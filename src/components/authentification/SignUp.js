@@ -21,8 +21,8 @@ const SignIn = ({ navigation }) => {
                 isAdmin: 0,
             })
             .then(function (response) {
-                console.log(response)
-                if (response.data === 'OK') {
+                console.log('signup', response)
+                if (response.status === 200) {
                     navigation.navigate('SignIn')
                 }
             })
