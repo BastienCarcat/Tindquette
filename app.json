@@ -15,13 +15,15 @@
         },
         "assetBundlePatterns": ["**/*"],
         "ios": {
-            "supportsTablet": true
+            "supportsTablet": true,
+            "bundleIdentifier": "ios.app"
         },
         "android": {
             "adaptiveIcon": {
                 "foregroundImage": "./assets/logo.png",
                 "backgroundColor": "#FFFFFF"
-            }
+            },
+            "package": "android.app"
         },
         "web": {
             "favicon": "./assets/logo.png"
