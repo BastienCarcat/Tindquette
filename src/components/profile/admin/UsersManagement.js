@@ -49,7 +49,7 @@ const UsersManagement = ({ user }) => {
             headers: { Authorization: 'Bearer ' + token },
         }
         axios
-            .get('http://localhost:8081/getAllUser', config)
+            .get('http://172.16.18.18:8080/getAllUser', config)
             .then(function (response) {
                 console.log(response.data)
                 setData(response.data.filter((user) => user.isAdmin === 0))
@@ -62,7 +62,7 @@ const UsersManagement = ({ user }) => {
 
     const deleteUser = (userIdDelete) => {
         axios
-            .delete('http://localhost:8081/user', {
+            .delete('http://172.16.18.18:8080/user', {
                 headers: {
                     Authorization: 'Bearer ' + token,
                 },
