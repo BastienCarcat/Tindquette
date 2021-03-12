@@ -38,7 +38,7 @@ const ListDisquettes = ({ user }) => {
             headers: { Authorization: 'Bearer ' + token },
         }
         axios
-            .get('http://localhost:8081/favori/' + userId, config)
+            .get('http://172.16.18.18:8080/favori/' + userId, config)
             .then(function (response) {
                 const formatData = _.map(response.data, (item) => {
                     return {
@@ -56,7 +56,7 @@ const ListDisquettes = ({ user }) => {
 
     const deleteMyFavori = (idDisquette) => {
         axios
-            .delete('http://localhost:8081/favori', {
+            .delete('http://172.16.18.18:8080/favori', {
                 headers: {
                     Authorization: 'Bearer ' + token,
                 },

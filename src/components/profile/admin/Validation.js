@@ -35,7 +35,7 @@ const Validation = ({ user }) => {
 
     const getAllDisquette = () => {
         axios
-            .get('http://localhost:8081/getAllDisquette')
+            .get('http://172.16.18.18:8080/getAllDisquette')
             .then(function (response) {
                 setDisquettes(
                     response.data.filter(
@@ -51,7 +51,7 @@ const Validation = ({ user }) => {
 
     const deleteDisquette = (idDisquette) => {
         axios
-            .delete('http://localhost:8081/deleteDisquette', {
+            .delete('http://172.16.18.18:8080/deleteDisquette', {
                 headers: {
                     Authorization: 'Bearer ' + token,
                 },
@@ -78,7 +78,7 @@ const Validation = ({ user }) => {
 
         axios
             .post(
-                'http://localhost:8081/acceptDisquette',
+                'http://172.16.18.18:8080/acceptDisquette',
                 bodyParameters,
                 config,
             )

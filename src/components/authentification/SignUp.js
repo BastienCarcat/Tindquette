@@ -14,7 +14,7 @@ const SignIn = ({ navigation }) => {
 
     const newUser = () => {
         axios
-            .post('http://localhost:8080/user', {
+            .post('http://172.16.18.18:8080/addUser', {
                 mail: mail,
                 pseudo: pseudo,
                 password: password,

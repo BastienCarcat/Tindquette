@@ -15,7 +15,7 @@ const SignIn = ({ addUser, navigation }) => {
 
     const connexion = () => {
         axios
-            .post('http://localhost:8080/connection', {
+            .post('http://172.16.18.18:8080/connection', {
                 mail: mail,
                 password: password,
             })

@@ -41,7 +41,7 @@ const Home = ({ user }) => {
 
     const getAllDisquette = () => {
         axios
-            .get('http://localhost:8081/getAllDisquette')
+            .get('http://172.16.18.18:8080/getAllDisquette')
             .then(function (response) {
                 setDisquettes(
                     response.data.filter(
@@ -66,7 +66,7 @@ const Home = ({ user }) => {
         }
 
         axios
-            .post('http://localhost:8081/favori', bodyParameters, config)
+            .post('http://172.16.18.18:8080/favori', bodyParameters, config)
             .then(function (response) {
                 console.log(response)
             })

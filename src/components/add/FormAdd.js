@@ -39,7 +39,7 @@ const FormAdd = ({ user }) => {
         }
 
         axios
-            .post('http://localhost:8081/disquette', bodyParameters, config)
+            .post('http://172.16.18.18:8080/disquette', bodyParameters, config)
             .then(function (response) {
                 console.log(response)
                 if (response.status === 200) {
